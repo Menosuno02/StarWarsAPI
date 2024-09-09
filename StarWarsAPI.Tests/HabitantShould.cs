@@ -36,6 +36,12 @@ namespace StarWarsAPI.Tests
         }
 
         [Fact]
+        public void Assert_HabitantIsNotRebel()
+        {
+            Assert.False(this._habitant.IsRebel);
+        }
+
+        [Fact]
         public void Assert_HabitantIsRebel()
         {
             this._habitant.IsRebel = true;
