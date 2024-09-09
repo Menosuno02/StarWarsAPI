@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarWarsAPI", "StarWarsAPI\StarWarsAPI.csproj", "{C7B8B153-E12A-49A1-A41A-4425B8AF54B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarWarsAPI.Tests", "StarWarsAPI.Tests\StarWarsAPI.Tests.csproj", "{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7B8B153-E12A-49A1-A41A-4425B8AF54B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7B8B153-E12A-49A1-A41A-4425B8AF54B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7B8B153-E12A-49A1-A41A-4425B8AF54B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7B8B153-E12A-49A1-A41A-4425B8AF54B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F01D4BF5-8232-4BAD-B21B-8622B510D538}
+	EndGlobalSection
+EndGlobal
