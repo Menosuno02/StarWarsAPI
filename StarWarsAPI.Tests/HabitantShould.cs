@@ -4,51 +4,48 @@ namespace StarWarsAPI.Tests
 {
     public class HabitantShould
     {
+        private readonly Habitant _habitant;
+
+        public HabitantShould()
+        {
+            this._habitant = new Habitant(1, "Luke Skywalker", 1, 1, false);
+        }
+
         [Fact]
         public void Assert_HabitantId()
         {
-            Habitant habitant = new Habitant();
-            habitant.IdHabitant = 1;
-            Assert.Equal(1, habitant.IdHabitant);
+            Assert.Equal(1, this._habitant.IdHabitant);
         }
 
         [Fact]
         public void Assert_HabitantName()
         {
-            Habitant habitant = new Habitant();
-            habitant.Name = "Luke Skywalker";
-            Assert.Equal("Luke Skywalker", habitant.Name);
+            Assert.Equal("Luke Skywalker", this._habitant.Name);
         }
 
         [Fact]
         public void Assert_HabitantSpeciesId()
         {
-            Habitant habitant = new Habitant();
-            habitant.IdSpecies = 1;
-            Assert.Equal(1, habitant.IdSpecies);
+            Assert.Equal(1, this._habitant.IdSpecies);
         }
 
         [Fact]
         public void Assert_HabitantHomePlanetId()
         {
-            Habitant habitant = new Habitant();
-            habitant.IdHomePlanet = 1;
-            Assert.Equal(1, habitant.IdHomePlanet);
+            Assert.Equal(1, this._habitant.IdHomePlanet);
         }
 
         [Fact]
         public void Assert_HabitantIsRebel()
         {
-            Habitant habitant = new Habitant();
-            habitant.IsRebel = true;
-            Assert.True(habitant.IsRebel);
+            this._habitant.IsRebel = true;
+            Assert.True(this._habitant.IsRebel);
         }
 
         [Fact]
         public void Assert_NewHabitantIsHabitant()
         {
-            Habitant habitant = new Habitant();
-            Assert.IsType<Habitant>(habitant);
+            Assert.IsType<Habitant>(this._habitant);
         }
     }
 }
