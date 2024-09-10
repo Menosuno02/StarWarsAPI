@@ -10,7 +10,7 @@ string connectionString = builder.Configuration
     .GetConnectionString("SqlServer");
 builder.Services.AddDbContext<StarWarsContext>
     (options => options.UseSqlServer(connectionString));
-builder.Services.AddTransient<RepositoryStarWars>();
+builder.Services.AddTransient<IRepositoryStarWars, RepositoryStarWars>();
 
 
 builder.Services.AddControllers();

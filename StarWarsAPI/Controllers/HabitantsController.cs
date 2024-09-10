@@ -8,9 +8,9 @@ namespace StarWarsAPI.Controllers
     [ApiController]
     public class HabitantsController : ControllerBase
     {
-        private RepositoryStarWars _repo;
+        private IRepositoryStarWars _repo;
 
-        public HabitantsController(RepositoryStarWars repo)
+        public HabitantsController(IRepositoryStarWars repo)
         {
             this._repo = repo;
         }

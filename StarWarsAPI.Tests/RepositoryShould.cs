@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
 using StarWarsAPI.Models;
 using StarWarsAPI.Repositories;
@@ -7,15 +8,18 @@ namespace StarWarsAPI.Tests
 {
     public class RepositoryShould
     {
-        private readonly RepositoryStarWars _repo;
+        private readonly IRepositoryStarWars _repo;
         private readonly StarWarsContext _context;
 
         public RepositoryShould()
         {
-            _context = new StarWarsContext(new DbContextOptionsBuilder<StarWarsContext>()
-                .UseInMemoryDatabase(databaseName: "StarWarsTestDatabase")
-                .Options);
-            _repo = new RepositoryStarWars(_context);
+            ServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddDbContext<StarWarsContext>(options =>
+                options.UseInMemoryDatabase("StarWarsTestDatabase"));
+            serviceCollection.AddTransient<IRepositoryStarWars, RepositoryStarWars>();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            _context = serviceProvider.GetRequiredService<StarWarsContext>();
+            _repo = serviceProvider.GetRequiredService<IRepositoryStarWars>();
         }
 
         [Fact]

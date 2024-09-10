@@ -8,9 +8,9 @@ namespace StarWarsAPI.Controllers
     [ApiController]
     public class SpeciesController : ControllerBase
     {
-        private RepositoryStarWars _repo;
+        private IRepositoryStarWars _repo;
 
-        public SpeciesController(RepositoryStarWars repo)
+        public SpeciesController(IRepositoryStarWars repo)
         {
             this._repo = repo;
         }
