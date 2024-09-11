@@ -7,12 +7,10 @@ namespace StarWarsAPI.Repositories
     public class RepositoryPlanets : IRepositoryPlanets
     {
         private readonly StarWarsContext _context;
-        private readonly IConfiguration _configuration;
 
-        public RepositoryPlanets(StarWarsContext context, IConfiguration configuration)
+        public RepositoryPlanets(StarWarsContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         public async Task<List<Planet>> GetPlanetsAsync()
@@ -22,6 +20,7 @@ namespace StarWarsAPI.Repositories
 
         public async Task<Planet> CreatePlanetAsync(Planet planet)
         {
+            /*
             if (_context.Database.GetDbConnection().ConnectionString ==
                 _configuration.GetConnectionString("SqlServer"))
             {
@@ -30,6 +29,7 @@ namespace StarWarsAPI.Repositories
                 else
                     planet.IdPlanet = await this._context.Planets.MaxAsync(p => p.IdPlanet) + 1;
             }
+            */
             this._context.Add(planet);
             await this._context.SaveChangesAsync();
             return planet;

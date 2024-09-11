@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
 using StarWarsAPI.Models;
@@ -6,81 +7,79 @@ using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Tests
 {
-    public class RepositoryShould
+    public class RepositoryHabitantsShould
     {
-        private readonly IRepositoryStarWars _repo;
+        private readonly IRepositoryHabitants _repo;
         private readonly StarWarsContext _context;
 
-        public RepositoryShould()
+        public RepositoryHabitantsShould()
         {
             ServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<StarWarsContext>(options =>
                 options.UseInMemoryDatabase("StarWarsTestDatabase"));
-            serviceCollection.AddTransient<IRepositoryStarWars, RepositoryStarWars>();
+            serviceCollection.AddTransient<IRepositoryHabitants, RepositoryHabitants>();
             var serviceProvider = serviceCollection.BuildServiceProvider();
             _context = serviceProvider.GetRequiredService<StarWarsContext>();
-            _repo = serviceProvider.GetRequiredService<IRepositoryStarWars>();
+            _repo = serviceProvider.GetRequiredService<IRepositoryHabitants>();
         }
 
         [Fact]
         public async Task Assert_GetHabitantsAsync()
         {
+            Assert.Empty(await _repo.GetHabitantsAsync());
             _context.Habitants.Add(new Habitant { IdHabitant = 2, Name = "C-3PO", IsRebel = false });
             await _context.SaveChangesAsync();
             List<Habitant> habitants = await _repo.GetHabitantsAsync();
             Assert.NotEmpty(habitants);
-            Assert.IsType<Habitant>(habitants.FirstOrDefault());
-        }
-
-        [Fact]
-        public async Task Assert_GetSpeciesAsync()
-        {
-            _context.Species.Add(new Species { IdSpecies = 1, Name = "Human" });
+            Assert.Single(habitants);
+            Habitant habitant = habitants.FirstOrDefault();
+            Assert.IsType<Habitant>(habitant);
+            Assert.Equal(2, habitant.IdHabitant);
+            Assert.Equal("C-3PO", habitant.Name);
+            Assert.False(habitant.IsRebel);
+            _context.Remove(habitant);
             await _context.SaveChangesAsync();
-            List<Species> species = await _repo.GetSpeciesAsync();
-            Assert.NotEmpty(species);
-            Assert.IsType<Species>(species.FirstOrDefault());
-        }
-
-        [Fact]
-        public async Task Assert_GetPlanetsAsync()
-        {
-            _context.Planets.AddRange(new Planet { IdPlanet = 1, Name = "Tatooine" });
-            await _context.SaveChangesAsync();
-            List<Planet> planets = await _repo.GetPlanetsAsync();
-            Assert.NotEmpty(planets);
-            Assert.IsType<Planet>(planets.FirstOrDefault());
         }
 
         [Fact]
         public async Task Assert_CreateHabitantAsync()
         {
+            Assert.Empty(await _repo.GetHabitantsAsync());
             Habitant habitant = new Habitant { Name = "Luke Skywalker", IsRebel = true };
             await _repo.CreateHabitantAsync(habitant);
+            Assert.Single(await _context.Habitants.ToListAsync());
             Habitant habitantFromDb = await _context.Habitants.FirstOrDefaultAsync(h => h.Name == "Luke Skywalker");
             Assert.NotNull(habitantFromDb);
             Assert.Equal(habitant.Name, habitantFromDb.Name);
+            Assert.Equal(habitant.IsRebel, habitantFromDb.IsRebel);
+            _context.Remove(habitantFromDb);
+            await _context.SaveChangesAsync();
         }
-
 
         [Fact]
         public async Task Assert_FindHabitantAsync()
         {
+            Assert.Empty(await _repo.GetHabitantsAsync());
             _context.Habitants.Add(new Habitant { IdHabitant = 3, Name = "Yoda", IsRebel = true });
             await _context.SaveChangesAsync();
             Habitant habitant = await _repo.FindHabitantAsync(3);
             Assert.NotNull(habitant);
             Assert.Equal("Yoda", habitant.Name);
+            _context.Remove(habitant);
+            await _context.SaveChangesAsync();
         }
 
         [Fact]
         public async Task Assert_GetRebelsAsync()
         {
+            Assert.Empty(await _repo.GetRebelsAsync());
             _context.Habitants.Add(new Habitant { IdHabitant = 4, Name = "Leia Organa", IsRebel = true });
             await _context.SaveChangesAsync();
             List<Habitant> rebels = await _repo.GetRebelsAsync();
-            Assert.NotEmpty(rebels);
+            Assert.Single(rebels);
             Assert.True(rebels.FirstOrDefault().IsRebel);
+            _context.Remove(rebels.FirstOrDefault());
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -7,16 +7,15 @@ namespace StarWarsAPI.Repositories
     public class RepositoryHabitants : IRepositoryHabitants
     {
         private readonly StarWarsContext _context;
-        private readonly IConfiguration _configuration;
 
-        public RepositoryHabitants(StarWarsContext context, IConfiguration configuration)
+        public RepositoryHabitants(StarWarsContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         public async Task<Habitant> CreateHabitantAsync(Habitant habitant)
         {
+            /*
             if (_context.Database.GetDbConnection().ConnectionString ==
                 _configuration.GetConnectionString("SqlServer"))
             {
@@ -25,6 +24,7 @@ namespace StarWarsAPI.Repositories
                 else
                     habitant.IdHabitant = await this._context.Habitants.MaxAsync(h => h.IdHabitant) + 1;
             }
+            */
             this._context.Add(habitant);
             await this._context.SaveChangesAsync();
             return habitant;
