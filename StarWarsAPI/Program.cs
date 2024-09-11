@@ -5,12 +5,26 @@ using StarWarsAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 string connectionString = builder.Configuration
     .GetConnectionString("SqlServer");
+
+
+// Usar LocalDB
+// 1. En appsettings.json poner una nueva cadena de conexión: Server=(localdb)\\MSSQLLocalDB;Integrated Security=True
+// 2. Cambiar la cadena de conexión de Program.cs por la nueva
+// 3. Instalar el nuget Microsoft.EntityFrameworkCore.Tools
+// 4. Abrir Tools > NuGet Package Manager > Package Manager Console
+// 5. Ejecutar el comando Add-Migration InitialCreate
+// 6. Ejecutar el comando Update-Database
+string connectionStringLocalDb = builder.Configuration
+    .GetConnectionString("SqlServerLocalDB");
+
+
 builder.Services.AddDbContext<StarWarsContext>
-    (options => options.UseSqlServer(connectionString));
-builder.Services.AddTransient<IRepositoryStarWars, RepositoryStarWars>();
+    (options => options.UseSqlServer(connectionStringLocalDb));
+builder.Services.AddTransient<IRepositoryHabitants, RepositoryHabitants>();
+builder.Services.AddTransient<IRepositoryPlanets, RepositoryPlanets>();
+builder.Services.AddTransient<IRepositorySpecies, RepositorySpecies>();
 
 
 builder.Services.AddControllers();

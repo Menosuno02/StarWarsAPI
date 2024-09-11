@@ -8,9 +8,9 @@ namespace StarWarsAPI.Controllers
     [ApiController]
     public class PlanetsController : ControllerBase
     {
-        private IRepositoryStarWars _repo;
+        private IRepositoryPlanets _repo;
 
-        public PlanetsController(IRepositoryStarWars repo)
+        public PlanetsController(IRepositoryPlanets repo)
         {
             this._repo = repo;
         }
@@ -19,6 +19,12 @@ namespace StarWarsAPI.Controllers
         public async Task<ActionResult<List<Planet>>> GetPlanets()
         {
             return await this._repo.GetPlanetsAsync();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Planet>> CreatePlanet(Planet planet)
+        {
+            return await this._repo.CreatePlanetAsync(planet);
         }
     }
 }

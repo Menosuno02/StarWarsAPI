@@ -4,22 +4,27 @@ using StarWarsAPI.Models;
 
 namespace StarWarsAPI.Repositories
 {
-    public class RepositoryStarWars : IRepositoryStarWars
+    public class RepositoryHabitants : IRepositoryHabitants
     {
-        private StarWarsContext _context;
+        private readonly StarWarsContext _context;
+        private readonly IConfiguration _configuration;
 
-        public RepositoryStarWars(StarWarsContext context)
+        public RepositoryHabitants(StarWarsContext context, IConfiguration configuration)
         {
-            this._context = context;
+            _context = context;
+            _configuration = configuration;
         }
 
-        #region HABITANTS
         public async Task<Habitant> CreateHabitantAsync(Habitant habitant)
         {
-            if (await this._context.Habitants.CountAsync() == 0)
-                habitant.IdHabitant = 1;
-            else
-                habitant.IdHabitant = await this._context.Habitants.MaxAsync(h => h.IdHabitant) + 1;
+            if (_context.Database.GetDbConnection().ConnectionString ==
+                _configuration.GetConnectionString("SqlServer"))
+            {
+                if (!await _context.Habitants.AnyAsync())
+                    habitant.IdHabitant = 1;
+                else
+                    habitant.IdHabitant = await this._context.Habitants.MaxAsync(h => h.IdHabitant) + 1;
+            }
             this._context.Add(habitant);
             await this._context.SaveChangesAsync();
             return habitant;
@@ -42,20 +47,5 @@ namespace StarWarsAPI.Repositories
             return await this._context.Habitants
                 .FirstOrDefaultAsync(h => h.IdHabitant == id);
         }
-        #endregion
-
-        #region PLANETS
-        public async Task<List<Planet>> GetPlanetsAsync()
-        {
-            return await this._context.Planets.ToListAsync();
-        }
-        #endregion
-
-        #region SPECIES 
-        public async Task<List<Species>> GetSpeciesAsync()
-        {
-            return await this._context.Species.ToListAsync();
-        }
-        #endregion
     }
 }
