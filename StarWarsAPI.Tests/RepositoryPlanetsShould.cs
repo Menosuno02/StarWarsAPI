@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
-using StarWarsAPI.Models;
-using StarWarsAPI.Repositories;
 using FluentAssertions;
+using StarWarsAPI.Models.Entities;
+using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Tests
 {
@@ -26,8 +26,8 @@ namespace StarWarsAPI.Tests
         [Fact]
         public async Task Assert_GetPlanetsAsync()
         {
-            // Instalamos el NuGet FluentAssertions
-            // Es un paquete que nos permite escribir aserciones más legibles
+            // Install the NuGet package FluentAssertions
+            // It's a package that allows us to write more readable assertions
             _context.Planets.Should().BeEmpty();
             _context.Planets.Add(new Planet { IdPlanet = 1, Name = "Tatooine" });
             await _context.SaveChangesAsync();

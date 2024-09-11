@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarWarsAPI.Data;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
+using StarWarsAPI.Models.Entities;
 
 namespace StarWarsAPI.Repositories
 {
@@ -13,26 +14,37 @@ namespace StarWarsAPI.Repositories
             _context = context;
         }
 
-        public async Task<List<Planet>> GetPlanetsAsync()
+        public async Task<List<PlanetDTO>> GetPlanetsAsync()
         {
-            return await this._context.Planets.ToListAsync();
+            return await _context.Planets
+                .Select(p => new PlanetDTO
+                {
+                    Name = p.Name
+                })
+                .ToListAsync();
         }
 
-        public async Task<Planet> CreatePlanetAsync(Planet planet)
+        public async Task<PlanetDTO> CreatePlanetAsync(PlanetDTO planet)
         {
-            /*
-            if (_context.Database.GetDbConnection().ConnectionString ==
-                _configuration.GetConnectionString("SqlServer"))
+            int idPlanet = await GenerateIdPlanetAsync();
+            Planet planetToCreate = new Planet
             {
-                if (!await _context.Planets.AnyAsync())
-                    planet.IdPlanet = 1;
-                else
-                    planet.IdPlanet = await this._context.Planets.MaxAsync(p => p.IdPlanet) + 1;
-            }
-            */
-            this._context.Add(planet);
-            await this._context.SaveChangesAsync();
+                IdPlanet = idPlanet,
+                Name = planet.Name
+            };
+            _context.Planets.Add(planetToCreate);
+            await _context.SaveChangesAsync();
             return planet;
+        }
+
+        private async Task<int> GenerateIdPlanetAsync()
+        {
+            // if (_context.Database.GetDbConnection().ConnectionString ==
+            //     _configuration.GetConnectionString("SqlServer"))
+            if (!await _context.Planets.AnyAsync())
+                return 1;
+            return await this._context.Planets
+                .MaxAsync(p => p.IdPlanet) + 1;
         }
     }
 }

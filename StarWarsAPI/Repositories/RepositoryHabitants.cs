@@ -1,51 +1,132 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using StarWarsAPI.Data;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
+using StarWarsAPI.Models.Entities;
 
 namespace StarWarsAPI.Repositories
 {
     public class RepositoryHabitants : IRepositoryHabitants
     {
         private readonly StarWarsContext _context;
+        private readonly IRepositoryPlanets _repositoryPlanets;
+        private readonly IRepositorySpecies _repositorySpecies;
 
-        public RepositoryHabitants(StarWarsContext context)
+        public RepositoryHabitants
+            (StarWarsContext context,
+            IRepositoryPlanets repositoryPlanets,
+            IRepositorySpecies repositorySpecies)
         {
             _context = context;
+            _repositoryPlanets = repositoryPlanets;
+            _repositorySpecies = repositorySpecies;
         }
 
-        public async Task<Habitant> CreateHabitantAsync(Habitant habitant)
+        public async Task<List<HabitantDTO>> GetHabitantsAsync()
         {
-            /*
-            if (_context.Database.GetDbConnection().ConnectionString ==
-                _configuration.GetConnectionString("SqlServer"))
-            {
-                if (!await _context.Habitants.AnyAsync())
-                    habitant.IdHabitant = 1;
-                else
-                    habitant.IdHabitant = await this._context.Habitants.MaxAsync(h => h.IdHabitant) + 1;
-            }
-            */
-            this._context.Add(habitant);
-            await this._context.SaveChangesAsync();
+            return await (from h in _context.Habitants
+                          join p in _context.Planets on h.IdHomePlanet equals p.IdPlanet
+                          join s in _context.Species on h.IdSpecies equals s.IdSpecies
+                          select new HabitantDTO
+                          {
+                              Name = h.Name,
+                              IsRebel = h.IsRebel,
+                              HomePlanet = p.Name,
+                              Species = s.Name
+                          })
+                         .ToListAsync();
+        }
+
+        public async Task<HabitantDTO> CreateHabitantAsync(HabitantDTO habitant)
+        {
+            Habitant habitantToCreate = await GenerateHabitantAsync(habitant);
+            _context.Habitants.Add(habitantToCreate);
+            await _context.SaveChangesAsync();
             return habitant;
         }
 
-        public async Task<List<Habitant>> GetRebelsAsync()
+        public async Task<List<HabitantDTO>> GetRebelsAsync()
         {
-            return await this._context.Habitants
+            List<HabitantDTO> habitants = await GetHabitantsAsync();
+            return habitants
                 .Where(h => h.IsRebel)
-                .ToListAsync();
+                .ToList();
         }
 
-        public async Task<List<Habitant>> GetHabitantsAsync()
+        public async Task<HabitantDTO> FindHabitantAsync(string name)
         {
-            return await this._context.Habitants.ToListAsync();
+            List<HabitantDTO> habitants = await GetHabitantsAsync();
+            return habitants
+                .FirstOrDefault(h => h.Name == name) ??
+                throw new ArgumentNullException(nameof(name), "Habitant not found");
         }
 
-        public async Task<Habitant> FindHabitantAsync(int id)
+        private async Task<int> GetIdHomePlanetAsync(string name)
         {
+            int idHomePlanet = await this._context.Planets
+                .Where(p => p.Name == name)
+                .Select(p => p.IdPlanet)
+                .FirstOrDefaultAsync();
+            if (idHomePlanet == 0)
+            {
+                PlanetDTO newPlanet = new PlanetDTO
+                {
+                    Name = name
+                };
+                await _repositoryPlanets.CreatePlanetAsync(newPlanet);
+                idHomePlanet = await this._context.Planets
+                    .Where(p => p.Name == name)
+                    .Select(p => p.IdPlanet)
+                    .FirstOrDefaultAsync();
+            }
+            return idHomePlanet;
+        }
+
+        private async Task<int> GetIdSpeciesAsync(string name)
+        {
+            int idSpecies = await _context.Species
+                .Where(s => s.Name == name)
+                .Select(s => s.IdSpecies)
+                .FirstOrDefaultAsync();
+            if (idSpecies == 0)
+            {
+                SpeciesDTO newSpecies = new SpeciesDTO
+                {
+                    Name = name
+                };
+                await _repositorySpecies.CreateSpeciesAsync(newSpecies);
+                idSpecies = await _context.Species
+                    .Where(s => s.Name == name)
+                    .Select(s => s.IdSpecies)
+                    .FirstOrDefaultAsync();
+            }
+            return idSpecies;
+        }
+
+        private async Task<int> GenerateIdHabitantAsync()
+        {
+            // if (_context.Database.GetDbConnection().ConnectionString ==
+            //     _configuration.GetConnectionString("SqlServer"))
+            if (!await _context.Habitants.AnyAsync())
+                return 1;
             return await this._context.Habitants
-                .FirstOrDefaultAsync(h => h.IdHabitant == id);
+                .MaxAsync(h => h.IdHabitant) + 1;
+        }
+
+        private async Task<Habitant> GenerateHabitantAsync(HabitantDTO habitant)
+        {
+            int idHabitant = await GenerateIdHabitantAsync();
+            int idHomePlanet = await GetIdHomePlanetAsync(habitant.HomePlanet);
+            int idSpecies = await GetIdSpeciesAsync(habitant.Species);
+            Habitant habitantToCreate = new Habitant
+            {
+                IdHabitant = idHabitant,
+                Name = habitant.Name,
+                IsRebel = habitant.IsRebel,
+                IdHomePlanet = idHomePlanet,
+                IdSpecies = idSpecies
+            };
+            return habitantToCreate;
         }
     }
 }

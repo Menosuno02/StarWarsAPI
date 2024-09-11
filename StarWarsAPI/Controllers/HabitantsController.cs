@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
 using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Controllers
@@ -16,27 +16,27 @@ namespace StarWarsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Habitant>>> GetHabitants()
+        public async Task<ActionResult<List<HabitantDTO>>> GetHabitants()
         {
             return await this._repo.GetHabitantsAsync();
         }
 
         [HttpGet]
         [Route("Rebels")]
-        public async Task<ActionResult<List<Habitant>>> GetRebels()
+        public async Task<ActionResult<List<HabitantDTO>>> GetRebels()
         {
             return await this._repo.GetRebelsAsync();
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<Habitant>> FindHabitant(int id)
+        [Route("{name}")]
+        public async Task<ActionResult<HabitantDTO>> FindHabitant(string name)
         {
-            return await this._repo.FindHabitantAsync(id);
+            return await this._repo.FindHabitantAsync(name);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Habitant>> InsertHabitant(Habitant habitant)
+        public async Task<ActionResult<HabitantDTO>> InsertHabitant(HabitantDTO habitant)
         {
             return await this._repo.CreateHabitantAsync(habitant);
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.Entities;
 using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Tests

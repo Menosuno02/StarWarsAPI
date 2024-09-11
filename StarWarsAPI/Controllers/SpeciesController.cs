@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
 using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Controllers
@@ -16,13 +16,13 @@ namespace StarWarsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Species>>> GetSpecies()
+        public async Task<ActionResult<List<SpeciesDTO>>> GetSpecies()
         {
             return await this._repo.GetSpeciesAsync();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Species>> CreateSpecies(Species species)
+        public async Task<ActionResult<SpeciesDTO>> CreateSpecies(SpeciesDTO species)
         {
             return await this._repo.CreateSpeciesAsync(species);
         }

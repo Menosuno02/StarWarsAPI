@@ -1,10 +1,10 @@
-﻿using StarWarsAPI.Models;
+﻿using StarWarsAPI.Models.DTOs;
 
 namespace StarWarsAPI.Repositories
 {
     public interface IRepositorySpecies
     {
-        public Task<List<Species>> GetSpeciesAsync();
-        public Task<Species> CreateSpeciesAsync(Species species);
+        public Task<List<SpeciesDTO>> GetSpeciesAsync();
+        public Task<SpeciesDTO> CreateSpeciesAsync(SpeciesDTO species);
     }
 }

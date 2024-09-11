@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarWarsAPI.Data;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
+using StarWarsAPI.Models.Entities;
 
 namespace StarWarsAPI.Repositories
 {
@@ -13,26 +14,37 @@ namespace StarWarsAPI.Repositories
             _context = context;
         }
 
-        public async Task<List<Species>> GetSpeciesAsync()
+        public async Task<List<SpeciesDTO>> GetSpeciesAsync()
         {
-            return await this._context.Species.ToListAsync();
+            return await _context.Species
+                .Select(s => new SpeciesDTO
+                {
+                    Name = s.Name
+                })
+                .ToListAsync();
         }
 
-        public async Task<Species> CreateSpeciesAsync(Species species)
+        public async Task<SpeciesDTO> CreateSpeciesAsync(SpeciesDTO species)
         {
-            /*
-            if (_context.Database.GetDbConnection().ConnectionString ==
-                _configuration.GetConnectionString("SqlServer"))
+            int idSpecies = await GenerateIdSpeciesAsync();
+            Species speciesToCreate = new Species
             {
-                if (!await _context.Species.AnyAsync())
-                    species.IdSpecies = 1;
-                else
-                    species.IdSpecies = await this._context.Species.MaxAsync(s => s.IdSpecies) + 1;
-            }
-            */
-            this._context.Add(species);
-            await this._context.SaveChangesAsync();
+                IdSpecies = idSpecies,
+                Name = species.Name
+            };
+            _context.Species.Add(speciesToCreate);
+            await _context.SaveChangesAsync();
             return species;
+        }
+
+        private async Task<int> GenerateIdSpeciesAsync()
+        {
+            // if (_context.Database.GetDbConnection().ConnectionString ==
+            //     _configuration.GetConnectionString("SqlServer"))
+            if (!await _context.Species.AnyAsync())
+                return 1;
+            return await this._context.Species
+                .MaxAsync(p => p.IdSpecies) + 1;
         }
     }
 }

@@ -9,13 +9,13 @@ string connectionString = builder.Configuration
     .GetConnectionString("SqlServer");
 
 
-// Usar LocalDB
-// 1. En appsettings.json poner una nueva cadena de conexión: Server=(localdb)\\MSSQLLocalDB;Integrated Security=True
-// 2. Cambiar la cadena de conexión de Program.cs por la nueva
-// 3. Instalar el nuget Microsoft.EntityFrameworkCore.Tools
-// 4. Abrir Tools > NuGet Package Manager > Package Manager Console
-// 5. Ejecutar el comando Add-Migration InitialCreate
-// 6. Ejecutar el comando Update-Database
+// Use LocalDB
+// 1. In appsettings.json, write a new connection string: Server=(localdb)\\MSSQLLocalDB;Integrated Security=True
+// 2. Change the connection string in Program.cs for the new one
+// 3. Install the NuGet Microsoft.EntityFrameworkCore.Tools
+// 4. Open Tools > NuGet Package Manager > Package Manager Console
+// 5. Execute the command Add-Migration InitialCreate
+// 6. Execute the command Update-Database
 string connectionStringLocalDb = builder.Configuration
     .GetConnectionString("SqlServerLocalDB");
 

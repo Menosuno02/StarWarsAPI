@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.DTOs;
 using StarWarsAPI.Repositories;
 
 namespace StarWarsAPI.Controllers
@@ -16,13 +16,13 @@ namespace StarWarsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Planet>>> GetPlanets()
+        public async Task<ActionResult<List<PlanetDTO>>> GetPlanets()
         {
             return await this._repo.GetPlanetsAsync();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Planet>> CreatePlanet(Planet planet)
+        public async Task<ActionResult<PlanetDTO>> CreatePlanet(PlanetDTO planet)
         {
             return await this._repo.CreatePlanetAsync(planet);
         }

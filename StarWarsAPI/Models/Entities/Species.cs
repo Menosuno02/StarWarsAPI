@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StarWarsAPI.Models
+namespace StarWarsAPI.Models.Entities
 {
     [Table("SPECIES")]
     public class Species

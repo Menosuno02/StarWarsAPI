@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StarWarsAPI.Models;
+using StarWarsAPI.Models.Entities;
 
 namespace StarWarsAPI.Data
 {
