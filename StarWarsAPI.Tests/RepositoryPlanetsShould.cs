@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
-using FluentAssertions;
+using StarWarsAPI.Models.DTOs;
 using StarWarsAPI.Models.Entities;
 using StarWarsAPI.Repositories;
 
@@ -31,15 +32,16 @@ namespace StarWarsAPI.Tests
             _context.Planets.Should().BeEmpty();
             _context.Planets.Add(new Planet { IdPlanet = 1, Name = "Tatooine" });
             await _context.SaveChangesAsync();
-            List<Planet> planets = await _repo.GetPlanetsAsync();
+            List<PlanetDTO> planets = await _repo.GetPlanetsAsync();
             planets.Should()
                 .NotBeEmpty()
                 .And.HaveCount(1);
-            Planet planet = planets.FirstOrDefault();
-            planet.Should().BeOfType<Planet>()
+            PlanetDTO planet = planets.FirstOrDefault();
+            planet.Should().BeOfType<PlanetDTO>()
                 .And.NotBeNull()
-                .And.Match<Planet>(p => p.IdPlanet == 1 && p.Name == "Tatooine");
-            _context.Remove(planet);
+                .And.Match<PlanetDTO>(p => p.Name == "Tatooine");
+            _context.Planets.Remove
+                (await _context.Planets.FirstOrDefaultAsync(p => p.Name == planet.Name));
             await _context.SaveChangesAsync();
         }
 
@@ -47,14 +49,14 @@ namespace StarWarsAPI.Tests
         public async Task Assert_CreatePlanetAsync()
         {
             _context.Planets.Should().BeEmpty();
-            Planet planet = new Planet { Name = "Tatooine" };
+            PlanetDTO planet = new PlanetDTO { Name = "Tatooine" };
             await _repo.CreatePlanetAsync(planet);
             await _context.SaveChangesAsync();
             _context.Planets.Should().HaveCount(1);
             Planet planetFromDb = await _context.Planets.FirstOrDefaultAsync(p => p.Name == "Tatooine");
             planetFromDb.Should().NotBeNull()
                 .And.Match<Planet>(p => p.Name == "Tatooine");
-            _context.Remove(planetFromDb);
+            _context.Planets.Remove(planetFromDb);
             await _context.SaveChangesAsync();
         }
     }

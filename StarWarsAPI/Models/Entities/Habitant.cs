@@ -3,23 +3,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StarWarsAPI.Models.Entities
 {
-    [Table("HABITANTS")]
+    [Table("Habitants")]
     public class Habitant
     {
         [Key]
-        [Column("IDHABITANT")]
+        [Column("IdHabitant")]
         public int IdHabitant { get; set; }
 
-        [Column("NAMEHABITANT")]
+        [Column("NameHabitant")]
         public string Name { get; set; }
 
-        [Column("IDSPECIES")]
+        [Column("IdSpecies")]
         public int IdSpecies { get; set; }
 
-        [Column("IDHOMEPLANET")]
+        [Column("IdHomePlanet")]
         public int IdHomePlanet { get; set; }
 
-        [Column("ISREBEL")]
+        [Column("IsRebel")]
         public bool IsRebel { get; set; }
 
 

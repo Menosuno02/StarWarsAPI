@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StarWarsAPI.Models.Entities
 {
-    [Table("SPECIES")]
+    [Table("Species")]
     public class Species
     {
         [Key]
-        [Column("IDSPECIES")]
+        [Column("IdSpecies")]
         public int IdSpecies { get; set; }
 
-        [Column("NAMESPECIES")]
+        [Column("NameSpecies")]
         public string Name { get; set; }
     }
 }

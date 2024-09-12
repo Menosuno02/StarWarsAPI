@@ -62,3 +62,11 @@ To configure the server and the SQL Server database from Management Studio if yo
 Then you have two options:
 1. Create your own database, run the `script.sql` in the database, and modify the `appsettings.json` file with the connection string.
 2. To avoid changing the connection string in `appsettings.json`, create a new database named **encamina** and run the `script.sql` inside it.
+
+## Use LocalDB
+- In `appsettings.json`, write a new connection string: Server=(localdb)\\MSSQLLocalDB;Integrated Security=True
+- Change the connection string in `Program.cs` for the new one
+- Install the NuGet **Microsoft.EntityFrameworkCore.Tools**
+- Open Tools > NuGet Package Manager > Package Manager Console
+- Execute the command **Add-Migration InitialCreate**
+- Execute the command **Update-Database**

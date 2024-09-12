@@ -1,0 +1,6 @@
+@StarWarsAPI.DatabaseFirst_HostAddress = http://localhost:5075
+
+GET {{StarWarsAPI.DatabaseFirst_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

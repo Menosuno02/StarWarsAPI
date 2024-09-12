@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
+using StarWarsAPI.Models.DTOs;
 using StarWarsAPI.Models.Entities;
 using StarWarsAPI.Repositories;
 
@@ -28,14 +29,14 @@ namespace StarWarsAPI.Tests
             Assert.Empty(await _repo.GetSpeciesAsync());
             _context.Species.Add(new Species { IdSpecies = 1, Name = "Human" });
             await _context.SaveChangesAsync();
-            List<Species> species = await _repo.GetSpeciesAsync();
+            List<SpeciesDTO> species = await _repo.GetSpeciesAsync();
             Assert.NotEmpty(species);
             Assert.Single(species);
-            Species speciesElement = species.FirstOrDefault();
-            Assert.IsType<Species>(speciesElement);
-            Assert.Equal(1, speciesElement.IdSpecies);
+            SpeciesDTO speciesElement = species.FirstOrDefault();
+            Assert.IsType<SpeciesDTO>(speciesElement);
             Assert.Equal("Human", speciesElement.Name);
-            _context.Remove(speciesElement);
+            _context.Species.Remove
+                (await _context.Species.FirstOrDefaultAsync(s => s.Name == speciesElement.Name));
             await _context.SaveChangesAsync();
         }
 
@@ -43,7 +44,7 @@ namespace StarWarsAPI.Tests
         public async Task Assert_CreateSpeciesAsync()
         {
             Assert.Empty(await _repo.GetSpeciesAsync());
-            Species species = new Species { Name = "Human" };
+            SpeciesDTO species = new SpeciesDTO { Name = "Human" };
             await _repo.CreateSpeciesAsync(species);
             await _context.SaveChangesAsync();
             Assert.Single(await _context.Species.ToListAsync());
