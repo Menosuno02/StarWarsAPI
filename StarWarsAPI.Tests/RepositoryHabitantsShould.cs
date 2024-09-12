@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
 using StarWarsAPI.Models.DTOs;
@@ -17,11 +18,14 @@ namespace StarWarsAPI.Tests
         public RepositoryHabitantsShould()
         {
             ServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
             serviceCollection.AddDbContext<StarWarsContext>(options =>
                 options.UseInMemoryDatabase("StarWarsTestDatabase"));
             serviceCollection.AddTransient<IRepositoryHabitants, RepositoryHabitants>();
             serviceCollection.AddTransient<IRepositoryPlanets, RepositoryPlanets>();
             serviceCollection.AddTransient<IRepositorySpecies, RepositorySpecies>();
+            
             var serviceProvider = serviceCollection.BuildServiceProvider();
             _context = serviceProvider.GetRequiredService<StarWarsContext>();
             _repoHabitants = serviceProvider.GetRequiredService<IRepositoryHabitants>();

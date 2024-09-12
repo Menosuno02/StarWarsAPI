@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarWarsAPI", "StarWarsAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarWarsAPI.Tests", "StarWarsAPI.Tests\StarWarsAPI.Tests.csproj", "{F7A6A3C4-6ACA-47E1-950B-BF358D0DD380}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarWarsAPI.DatabaseFirst", "StarWarsAPI.DatabaseFirst\StarWarsAPI.DatabaseFirst.csproj", "{27AC61C5-187C-4979-B62B-6FDD712FA44A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarWarsAPI.DatabaseFirst", "StarWarsAPI.DatabaseFirst\StarWarsAPI.DatabaseFirst.csproj", "{27AC61C5-187C-4979-B62B-6FDD712FA44A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

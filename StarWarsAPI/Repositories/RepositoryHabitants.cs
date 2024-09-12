@@ -132,8 +132,6 @@ namespace StarWarsAPI.Repositories
 
         private async Task<int> GenerateIdHabitantAsync()
         {
-            // if (_context.Database.GetDbConnection().ConnectionString ==
-            //     _configuration.GetConnectionString("SqlServer"))
             _logger.LogInformation("Generating the habitant ID");
             if (!await _context.Habitants.AnyAsync())
                 return 1;
@@ -143,17 +141,18 @@ namespace StarWarsAPI.Repositories
 
         private async Task<Habitant> GenerateHabitantAsync(HabitantDTO habitant)
         {
-            int idHabitant = await GenerateIdHabitantAsync();
             int idHomePlanet = await GetIdHomePlanetAsync(habitant.HomePlanet);
             int idSpecies = await GetIdSpeciesAsync(habitant.Species);
             Habitant habitantToCreate = new Habitant
             {
-                IdHabitant = idHabitant,
                 Name = habitant.Name,
                 IsRebel = habitant.IsRebel,
                 IdHomePlanet = idHomePlanet,
                 IdSpecies = idSpecies
             };
+            if (_context.Database.IsSqlServer() &&
+                !_context.Database.GetDbConnection().ConnectionString.Contains("(localdb)"))
+                habitantToCreate.IdHabitant = await GenerateIdHabitantAsync();
             return habitantToCreate;
         }
     }

@@ -30,12 +30,15 @@ namespace StarWarsAPI.Repositories
 
         public async Task<PlanetDTO> CreatePlanetAsync(PlanetDTO planet)
         {
-            int idPlanet = await GenerateIdPlanetAsync();
+            if (await DoesPlanetExist(planet.Name))
+                throw new InvalidOperationException("Planet already exists");
             Planet planetToCreate = new Planet
             {
-                IdPlanet = idPlanet,
                 Name = planet.Name
             };
+            if (_context.Database.IsSqlServer() &&
+                !_context.Database.GetDbConnection().ConnectionString.Contains("(localdb)"))
+                planetToCreate.IdPlanet = await GenerateIdPlanetAsync();
             _context.Planets.Add(planetToCreate);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Planet registered: {planet.Name}");
@@ -44,13 +47,17 @@ namespace StarWarsAPI.Repositories
 
         private async Task<int> GenerateIdPlanetAsync()
         {
-            // if (_context.Database.GetDbConnection().ConnectionString ==
-            //     _configuration.GetConnectionString("SqlServer"))
             _logger.LogInformation("Generating the planet ID");
             if (!await _context.Planets.AnyAsync())
                 return 1;
             return await this._context.Planets
                 .MaxAsync(p => p.IdPlanet) + 1;
+        }
+
+        private async Task<bool> DoesPlanetExist(string name)
+        {
+            return await _context.Planets
+                .AnyAsync(p => p.Name == name);
         }
     }
 }

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "12345"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    command: >
+      /bin/bash -c "
+      /opt/mssql/bin/sqlservr & 
+      while ! /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 12345 -Q 'SELECT 1' > /dev/null 2>&1; do 
+      echo 'Waiting for SQL Server to start...'; 
+      sleep 5; 
+      done && 
+      /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 12345 -Q 'CREATE DATABASE encamina;'"
+
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=encamina;User=sa;Password=12345;"
+    ports:
+      - "5000:80"
+
+volumes:
+  sqlserverdata:

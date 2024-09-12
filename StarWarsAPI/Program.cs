@@ -24,7 +24,7 @@ string connectionString = builder.Configuration
     .GetConnectionString("SqlServer");
 
 builder.Services.AddDbContext<StarWarsContext>
-    (options => options.UseSqlServer(connectionString));
+    (options => options.UseSqlServer(connectionStringLocalDb));
 
 builder.Services.AddTransient<IRepositoryHabitants, RepositoryHabitants>();
 builder.Services.AddTransient<IRepositoryPlanets, RepositoryPlanets>();

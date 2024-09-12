@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StarWarsAPI.Data;
 using StarWarsAPI.Models.DTOs;
@@ -16,9 +17,12 @@ namespace StarWarsAPI.Tests
         public RepositoryPlanetsShould()
         {
             ServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
             serviceCollection.AddDbContext<StarWarsContext>(options =>
                 options.UseInMemoryDatabase("StarWarsTestDatabase"));
             serviceCollection.AddTransient<IRepositoryPlanets, RepositoryPlanets>();
+
             var serviceProvider = serviceCollection.BuildServiceProvider();
             _context = serviceProvider.GetRequiredService<StarWarsContext>();
             _repo = serviceProvider.GetRequiredService<IRepositoryPlanets>();
@@ -28,7 +32,7 @@ namespace StarWarsAPI.Tests
         public async Task Assert_GetPlanetsAsync()
         {
             // Install the NuGet package FluentAssertions
-            // It's a package that allows us to write more readable assertions
+            // It allows us to write more readable assertions
             _context.Planets.Should().BeEmpty();
             _context.Planets.Add(new Planet { IdPlanet = 1, Name = "Tatooine" });
             await _context.SaveChangesAsync();

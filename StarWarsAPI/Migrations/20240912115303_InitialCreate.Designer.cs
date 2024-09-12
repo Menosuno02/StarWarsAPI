@@ -11,7 +11,7 @@ using StarWarsAPI.Data;
 namespace StarWarsAPI.Migrations
 {
     [DbContext(typeof(StarWarsContext))]
-    [Migration("20240911111736_InitialCreate")]
+    [Migration("20240912115303_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,73 +24,73 @@ namespace StarWarsAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StarWarsAPI.Models.Habitant", b =>
+            modelBuilder.Entity("StarWarsAPI.Models.Entities.Habitant", b =>
                 {
                     b.Property<int>("IdHabitant")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("IDHABITANT");
+                        .HasColumnName("IdHabitant");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdHabitant"));
 
                     b.Property<int>("IdHomePlanet")
                         .HasColumnType("int")
-                        .HasColumnName("IDHOMEPLANET");
+                        .HasColumnName("IdHomePlanet");
 
                     b.Property<int>("IdSpecies")
                         .HasColumnType("int")
-                        .HasColumnName("IDSPECIES");
+                        .HasColumnName("IdSpecies");
 
                     b.Property<bool>("IsRebel")
                         .HasColumnType("bit")
-                        .HasColumnName("ISREBEL");
+                        .HasColumnName("IsRebel");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("NAMEHABITANT");
+                        .HasColumnName("NameHabitant");
 
                     b.HasKey("IdHabitant");
 
-                    b.ToTable("HABITANTS");
+                    b.ToTable("Habitants");
                 });
 
-            modelBuilder.Entity("StarWarsAPI.Models.Planet", b =>
+            modelBuilder.Entity("StarWarsAPI.Models.Entities.Planet", b =>
                 {
                     b.Property<int>("IdPlanet")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("IDPLANET");
+                        .HasColumnName("IdPlanet");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPlanet"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("NAMEPLANET");
+                        .HasColumnName("NamePlanet");
 
                     b.HasKey("IdPlanet");
 
-                    b.ToTable("PLANETS");
+                    b.ToTable("Planets");
                 });
 
-            modelBuilder.Entity("StarWarsAPI.Models.Species", b =>
+            modelBuilder.Entity("StarWarsAPI.Models.Entities.Species", b =>
                 {
                     b.Property<int>("IdSpecies")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("IDSPECIES");
+                        .HasColumnName("IdSpecies");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdSpecies"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("NAMESPECIES");
+                        .HasColumnName("NameSpecies");
 
                     b.HasKey("IdSpecies");
 
-                    b.ToTable("SPECIES");
+                    b.ToTable("Species");
                 });
 #pragma warning restore 612, 618
         }

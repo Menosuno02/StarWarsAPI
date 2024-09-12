@@ -68,5 +68,11 @@ Then you have two options:
 - Change the connection string in `Program.cs` for the new one
 - Install the NuGet **Microsoft.EntityFrameworkCore.Tools**
 - Open Tools > NuGet Package Manager > Package Manager Console
+- Delete the Migrations folder if it exists
 - Execute the command **Add-Migration InitialCreate**
 - Execute the command **Update-Database**
+
+## Docker Support
+- Right-click on the project > Add > Docker Support
+- Select Linux
+- Run the project with Docker Desktop

@@ -30,12 +30,15 @@ namespace StarWarsAPI.Repositories
 
         public async Task<SpeciesDTO> CreateSpeciesAsync(SpeciesDTO species)
         {
-            int idSpecies = await GenerateIdSpeciesAsync();
+            if (await DoesSpeciesExist(species.Name))
+                throw new InvalidOperationException("Species already exists");
             Species speciesToCreate = new Species
             {
-                IdSpecies = idSpecies,
                 Name = species.Name
             };
+            if (_context.Database.IsSqlServer() &&
+                !_context.Database.GetDbConnection().ConnectionString.Contains("(localdb)"))
+                speciesToCreate.IdSpecies = await GenerateIdSpeciesAsync();
             _context.Species.Add(speciesToCreate);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Species registered: {species.Name}");
@@ -44,13 +47,17 @@ namespace StarWarsAPI.Repositories
 
         private async Task<int> GenerateIdSpeciesAsync()
         {
-            // if (_context.Database.GetDbConnection().ConnectionString ==
-            //     _configuration.GetConnectionString("SqlServer"))
             _logger.LogInformation("Generating the species ID");
             if (!await _context.Species.AnyAsync())
                 return 1;
             return await this._context.Species
                 .MaxAsync(p => p.IdSpecies) + 1;
+        }
+
+        private async Task<bool> DoesSpeciesExist(string name)
+        {
+            return await _context.Species
+                .AnyAsync(s => s.Name == name);
         }
     }
 }
