@@ -59,10 +59,23 @@ namespace StarWarsAPI.Repositories
 
         public async Task<HabitantDTO> FindHabitantAsync(string name)
         {
-            List<HabitantDTO> habitants = await GetHabitantsAsync();
-            return habitants
-                .FirstOrDefault(h => h.Name == name) ??
-                throw new ArgumentNullException(nameof(name), "Habitant not found");
+            Habitant habitant = await _context.Habitants
+                .Where(h => h.Name == name)
+                .FirstOrDefaultAsync();
+            if (habitant == null)
+                throw new KeyNotFoundException
+                    ($"Habitant not found with name {name}");
+
+            string homePlanet = await GetNamePlanetAsync(habitant.IdHomePlanet);
+            string species = await GetNameSpeciesAsync(habitant.IdSpecies);
+            HabitantDTO habitantDTO = new HabitantDTO
+            {
+                Name = habitant.Name,
+                IsRebel = habitant.IsRebel,
+                HomePlanet = homePlanet,
+                Species = species
+            };
+            return habitantDTO;
         }
 
         private async Task<int> GetIdHomePlanetAsync(string name)
@@ -99,6 +112,22 @@ namespace StarWarsAPI.Repositories
                 .Select(s => s.IdSpecies)
                 .FirstOrDefaultAsync();
             return idSpecies;
+        }
+
+        private async Task<string> GetNamePlanetAsync(int id)
+        {
+            return await _context.Planets
+                .Where(p => p.IdPlanet == id)
+                .Select(p => p.Name)
+                .FirstOrDefaultAsync();
+        }
+
+        private async Task<string> GetNameSpeciesAsync(int id)
+        {
+            return await _context.Species
+                .Where(s => s.IdSpecies == id)
+                .Select(s => s.Name)
+                .FirstOrDefaultAsync();
         }
 
         private async Task<int> GenerateIdHabitantAsync()

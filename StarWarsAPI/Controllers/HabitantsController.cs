@@ -44,10 +44,10 @@ namespace StarWarsAPI.Controllers
             {
                 return await this._repo.FindHabitantAsync(name);
             }
-            catch (ArgumentNullException ex)
+            catch (KeyNotFoundException ex)
             {
-                _logger.LogError(ex.Message);
-                return NotFound();
+                _logger.LogError(ex, "KeyNotFoundException: {Message}", ex.Message);
+                return NotFound(ex.Message);
             }
         }
 
