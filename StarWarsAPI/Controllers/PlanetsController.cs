@@ -9,21 +9,27 @@ namespace StarWarsAPI.Controllers
     public class PlanetsController : ControllerBase
     {
         private IRepositoryPlanets _repo;
+        private ILogger<PlanetsController> _logger;
 
-        public PlanetsController(IRepositoryPlanets repo)
+        public PlanetsController
+            (IRepositoryPlanets repo,
+            ILogger<PlanetsController> logger)
         {
             this._repo = repo;
+            this._logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PlanetDTO>>> GetPlanets()
         {
+            _logger.LogInformation("Getting the planets");
             return await this._repo.GetPlanetsAsync();
         }
 
         [HttpPost]
         public async Task<ActionResult<PlanetDTO>> CreatePlanet(PlanetDTO planet)
         {
+            _logger.LogInformation("Registering new planet");
             return await this._repo.CreatePlanetAsync(planet);
         }
     }

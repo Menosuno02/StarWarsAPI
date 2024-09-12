@@ -4,6 +4,10 @@ using StarWarsAPI.Data;
 using StarWarsAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+// For logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 
 // Use LocalDB
@@ -21,10 +25,12 @@ string connectionString = builder.Configuration
 
 builder.Services.AddDbContext<StarWarsContext>
     (options => options.UseSqlServer(connectionString));
+
 builder.Services.AddTransient<IRepositoryHabitants, RepositoryHabitants>();
 builder.Services.AddTransient<IRepositoryPlanets, RepositoryPlanets>();
 builder.Services.AddTransient<IRepositorySpecies, RepositorySpecies>();
 
+builder.Services.AddLogging();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

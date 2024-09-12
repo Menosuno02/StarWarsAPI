@@ -8,10 +8,14 @@ namespace StarWarsAPI.Repositories
     public class RepositorySpecies : IRepositorySpecies
     {
         private readonly StarWarsContext _context;
+        private readonly ILogger<RepositorySpecies> _logger;
 
-        public RepositorySpecies(StarWarsContext context)
+        public RepositorySpecies
+            (StarWarsContext context,
+            ILogger<RepositorySpecies> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<SpeciesDTO>> GetSpeciesAsync()
@@ -34,6 +38,7 @@ namespace StarWarsAPI.Repositories
             };
             _context.Species.Add(speciesToCreate);
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Species registered: {species.Name}");
             return species;
         }
 
@@ -41,6 +46,7 @@ namespace StarWarsAPI.Repositories
         {
             // if (_context.Database.GetDbConnection().ConnectionString ==
             //     _configuration.GetConnectionString("SqlServer"))
+            _logger.LogInformation("Generating the species ID");
             if (!await _context.Species.AnyAsync())
                 return 1;
             return await this._context.Species

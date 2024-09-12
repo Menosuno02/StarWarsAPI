@@ -1,6 +1,6 @@
 ﻿namespace StarWarsAPI.Models.DTOs
 {
-    public class SpeciesDTO : INameable
+    public interface INameable
     {
         public string Name { get; set; }
     }

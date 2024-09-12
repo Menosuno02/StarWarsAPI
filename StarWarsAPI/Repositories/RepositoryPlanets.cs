@@ -8,10 +8,14 @@ namespace StarWarsAPI.Repositories
     public class RepositoryPlanets : IRepositoryPlanets
     {
         private readonly StarWarsContext _context;
+        private readonly ILogger<RepositoryPlanets> _logger;
 
-        public RepositoryPlanets(StarWarsContext context)
+        public RepositoryPlanets
+            (StarWarsContext context,
+            ILogger<RepositoryPlanets> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<PlanetDTO>> GetPlanetsAsync()
@@ -34,6 +38,7 @@ namespace StarWarsAPI.Repositories
             };
             _context.Planets.Add(planetToCreate);
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Planet registered: {planet.Name}");
             return planet;
         }
 
@@ -41,6 +46,7 @@ namespace StarWarsAPI.Repositories
         {
             // if (_context.Database.GetDbConnection().ConnectionString ==
             //     _configuration.GetConnectionString("SqlServer"))
+            _logger.LogInformation("Generating the planet ID");
             if (!await _context.Planets.AnyAsync())
                 return 1;
             return await this._context.Planets
