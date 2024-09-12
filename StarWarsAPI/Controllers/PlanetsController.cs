@@ -27,10 +27,19 @@ namespace StarWarsAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PlanetDTO>> CreatePlanet(PlanetDTO planet)
         {
             _logger.LogInformation("Registering new planet");
-            return await this._repo.CreatePlanetAsync(planet);
+            try
+            {
+                return await this._repo.CreatePlanetAsync(planet);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "InvalidOperationException: {Message}", ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -27,10 +27,19 @@ namespace StarWarsAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SpeciesDTO>> CreateSpecies(SpeciesDTO species)
         {
             _logger.LogInformation("Registering new species");
-            return await this._repo.CreateSpeciesAsync(species);
+            try
+            {
+                return await this._repo.CreateSpeciesAsync(species);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "InvalidOperationException: {Message}", ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
