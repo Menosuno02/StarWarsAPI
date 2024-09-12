@@ -63,43 +63,33 @@ namespace StarWarsAPI.Repositories
 
         private async Task<int> GetIdHomePlanetAsync(string name)
         {
-            int idHomePlanet = await this._context.Planets
-                .Where(p => p.Name == name)
-                .Select(p => p.IdPlanet)
-                .FirstOrDefaultAsync();
-            if (idHomePlanet == 0)
+            int count = await this._context.Planets
+                .CountAsync(p => p.Name == name);
+            if (count == 0)
             {
-                PlanetDTO newPlanet = new PlanetDTO
-                {
-                    Name = name
-                };
-                await _repositoryPlanets.CreatePlanetAsync(newPlanet);
-                idHomePlanet = await this._context.Planets
+                await _repositoryPlanets
+                    .CreatePlanetAsync(new PlanetDTO { Name = name });
+            }
+            int idHomePlanet = await this._context.Planets
                     .Where(p => p.Name == name)
                     .Select(p => p.IdPlanet)
                     .FirstOrDefaultAsync();
-            }
             return idHomePlanet;
         }
 
         private async Task<int> GetIdSpeciesAsync(string name)
         {
+            int count = await this._context.Species
+                .CountAsync(s => s.Name == name);
+            if (count == 0)
+            {
+                await _repositorySpecies
+                    .CreateSpeciesAsync(new SpeciesDTO { Name = name });
+            }
             int idSpecies = await _context.Species
                 .Where(s => s.Name == name)
                 .Select(s => s.IdSpecies)
                 .FirstOrDefaultAsync();
-            if (idSpecies == 0)
-            {
-                SpeciesDTO newSpecies = new SpeciesDTO
-                {
-                    Name = name
-                };
-                await _repositorySpecies.CreateSpeciesAsync(newSpecies);
-                idSpecies = await _context.Species
-                    .Where(s => s.Name == name)
-                    .Select(s => s.IdSpecies)
-                    .FirstOrDefaultAsync();
-            }
             return idSpecies;
         }
 

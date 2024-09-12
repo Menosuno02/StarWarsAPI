@@ -5,9 +5,6 @@ using StarWarsAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = builder.Configuration
-    .GetConnectionString("SqlServer");
-
 
 // Use LocalDB
 // 1. In appsettings.json, write a new connection string: Server=(localdb)\\MSSQLLocalDB;Integrated Security=True
@@ -19,6 +16,8 @@ string connectionString = builder.Configuration
 string connectionStringLocalDb = builder.Configuration
     .GetConnectionString("SqlServerLocalDB");
 
+string connectionString = builder.Configuration
+    .GetConnectionString("SqlServer");
 
 builder.Services.AddDbContext<StarWarsContext>
     (options => options.UseSqlServer(connectionString));
